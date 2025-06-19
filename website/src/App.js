@@ -1,14 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 import Globe from 'react-globe.gl';
+import { styles } from './styles';
 
 function App() {
   const globeEl = useRef();
-
   const now = new Date();
   const time = now.getHours();
 
   useEffect(() => {
-    globeEl.current.pointOfView({ lat: 20, lng: 0, altitude: 2.5 }, 4000);
+    globeEl.current.pointOfView({ lat: 33.7501, lng: -84.3885, altitude: 1.5 }, 4000);
   }, []);
 
   let globeUrl = "//unpkg.com/three-globe/example/img/earth-day.jpg";
@@ -17,83 +17,80 @@ function App() {
   }
 
   return (
-    <div style={{ backgroundColor: '#000', height: '100vh', display: 'flex' }}>
-      {/* Left scrollable white box */}
-      <div
-        style={{
-          width: '35vw',
-          minWidth: '300px',
-          maxWidth: '600px',
-          background: 'white',
-          overflowY: 'auto',
-          boxSizing: 'border-box',
-          borderRight: '1px solid #eee',
-          position: 'relative'
-        }}
+    <div style={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column' }}>
+      {/* Navigation Bar */}
+      <nav
+        style={styles.navBar}
       >
+        <div style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>Anthony's Website</div>
+        <div style={{ display: 'flex', gap: '24px' }}>
+          <a href="#about" style={{ color: 'white', textDecoration: 'none' }}>About</a>
+          <a href="#projects" style={{ color: 'white', textDecoration: 'none' }}>Projects</a>
+          <a href="#contact" style={{ color: 'white', textDecoration: 'none' }}>Contact</a>
+        </div>
+      </nav>
+
+      {/* Main Content */}
+      <div style={{ flex: 1, display: 'flex', position: 'relative' }}>
+        {/* Background Globe */}
         <div
-          style={{
-            top: 0,
-            left: 0,
-            background: 'white',
-            color: 'black',
-            padding: '8px 16px',
-            fontWeight: 'bold',
-            overflowX: 'hidden',
-            fontSize: '32px',
-            zIndex: 1000,
-            position: 'sticky',
-            textAlign: 'center',
-            borderBottomRightRadius: '8px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          }}
+          style={styles.globeDiv}
         >
-          Anthony's Website
-        </div>
-        <div style={{ marginTop: '8px', padding: '24px' }}>
-          <img
-            src={require('./assets/anthony.jpg')}
-            alt="Anthony"
-            style={{ width: '100%', borderRadius: '8px', marginBottom: '8px' }}
+          <Globe
+            ref={globeEl}
+            globeImageUrl={globeUrl}
+            backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
+            labelsData={[
+              { lat: 33.7501, lng: -84.3885, text: 'Atlanta, GA', color: 'red' },
+              { lat: 42.3555, lng: -71.0565, text: 'Boston, MA', color: 'blue' },
+              { lat: 40.5089, lng: -74.8587, text: 'Montgomery, NJ', color: 'brown' },
+              { lat: 41.3874, lng: 2.1686, text: 'Barcelona, Spain', color: 'yellow' },
+              { lat: 35.14066, lng: -84.34971, text: 'Milton, GA', color: 'purple' },
+            ]}
+            labelLat="lat"
+            labelLng="lng"
+            labelText="text"
+            labelColor={d => d.color}
+            labelSize={1.0}
+            labelDotRadius={0.6}
           />
         </div>
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', margin: '24px 0' }}>
+
+        {/* Left Overlay Panel */}
+        <div
+          style={styles.overlay}
+        >
+          <h1>
+            {time < 12
+              ? 'Good morning!'
+              : time < 18
+              ? 'Good afternoon!'
+              : 'Good evening!'}
+          </h1>
           <img
-            src={require('./assets/gt_logo.png')}
-            alt="Georgia Tech"
-            style={{ width: '160px', height: 'auto', borderRadius: '8px', marginBottom: '8px' }}
+              src={require('./assets/anthony.jpg')}
+              alt="Anthony"
+              style={{ width: '200px', height: 'auto', borderRadius: '8px' }}
           />
-          <img
-            src={require('./assets/harvard_logo.png')}
-            alt="Harvard"
-            style={{ width: '70px', height: 'auto', borderRadius: '8px', marginBottom: '8px' }}
-          />
+          <div
+            style={styles.logoDiv}
+          >
+            <img
+              src={require('./assets/gt_logo.png')}
+              alt="Georgia Tech"
+              style={{ width: '80px', height: 'auto', borderRadius: '8px' }}
+            />
+            <img
+              src={require('./assets/harvard_logo.png')}
+              alt="Harvard"
+              style={{ width: '80px', height: 'auto', borderRadius: '8px' }}
+            />
+          </div>
+          <p style={{ fontSize: '1.1rem', margin: '0' }}>
+            Hi, I'm Anthony! Each dot on the globe marks a place I've lived. Click on any dot to learn more about my journey.
+          </p>
         </div>
-      </div>
-      {/* Right globe box */}
-      <div
-        style={{
-          flex: 1,
-          background: '#222',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Globe
-          ref={globeEl}
-          globeImageUrl={globeUrl}
-          backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
-          pointsData={[
-            { lat: 33.7501, lng: -84.3885, size: 1, color: 'red' },   // Atlanta
-            { lat: 42.3555, lng: -71.0565, size: 1, color: 'blue' },   // Boston
-            { lat: 40.5089, lng: -74.8587, size: 1, color: 'green' }, // New Jersey
-            { lat: 41.3874, lng: 2.1686, size: 1, color: 'yellow' }, // Barcelona
-            { lat: 34.14066, lng: -84.34971, size: 1, color: 'purple' }, // Milton, GA
-          ]}
-          pointAltitude="size"
-          pointColor="color"
-        />
+        <div style={{ flex: 1 }} />
       </div>
     </div>
   );
